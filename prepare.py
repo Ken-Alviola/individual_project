@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np 
+from sklearn.model_selection import train_test_split
+import sklearn.preprocessing
 
 def handle_missing_values(df, prop_required_row = 0.75, prop_required_col = 0.75):
     ''' function which takes in a dataframe, required notnull proportions of non-null rows and columns.
@@ -37,3 +39,35 @@ def missing_zero_values_table(df):
               " columns that have NULL values.")
 #         mz_table.to_excel('D:/sampledata/missing_and_zero_values.xlsx', freeze_panes=(1,0), index = False)
     return mz_table
+
+def split_semicon(df, stratify_by=None):
+    """
+    train, validate, test split
+    To stratify, send in a column name
+    """
+    
+    if stratify_by == None:
+        train, test = train_test_split(df, test_size=.2, random_state=123)
+        train, validate = train_test_split(df, test_size=.3, random_state=123)
+    else:
+        train_validate, test = train_test_split(df, test_size=.2, random_state=123, stratify=df[stratify_by])
+        train, validate = train_test_split(train_validate, test_size=.3, random_state=123, stratify=train_validate[stratify_by])
+    
+    return train, validate, test
+
+def scale_data_minmax(train,validate,test):
+    '''Accepts train, validate, test data frames and applies standard scaler
+    return: train, validate, test scaled pandas dataframe'''
+    
+    scaler = sklearn.preprocessing.MinMaxScaler()
+    scaler.fit(train)
+    
+    train_scaled = scaler.transform(train)
+    validate_scaled = scaler.transform(validate)
+    test_scaled = scaler.transform(test)
+    
+    train_scaled = pd.DataFrame(train_scaled, columns=train.columns)
+    validate_scaled = pd.DataFrame(validate_scaled, columns=train.columns)
+    test_scaled = pd.DataFrame(test_scaled, columns=train.columns)
+    
+    return train_scaled, validate_scaled, test_scaled
