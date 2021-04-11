@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np 
 from sklearn.model_selection import train_test_split
 import sklearn.preprocessing
+from sklearn.feature_selection import RFE, SelectKBest, f_regression
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, classification_report
 
 def handle_missing_values(df, prop_required_row = 0.75, prop_required_col = 0.75):
     ''' function which takes in a dataframe, required notnull proportions of non-null rows and columns.
@@ -94,3 +97,11 @@ def get_metrics(model, X, y):
     The True Negative Rate is {tnr:.3}, and the False Negative Rate is {fnr:.3}
     ''')
     return class_report
+
+def rfe(X,y,k):
+    log = LogisticRegression()
+    rfe = RFE(log,k)
+    rfe.fit(X, y)
+    feature_mask_rfe = rfe.support_
+    rfe_feature = X.iloc[:,feature_mask_rfe].columns.tolist()
+    return rfe_feature
