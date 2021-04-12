@@ -15,7 +15,8 @@
 | Column | Definition | Data Type |
 | ----- | ----- | ----- |
 |0-589| 590 signals/measurements during the manufacturing process| float|
-|timestamp| date and time the wafer was evaluated| object|
+|date| date the wafer was evaluated| object|
+|time| time the wafer was evaluated| object|
 
 ---------------------------------------------------
 | Target | Definition | Data Type |
@@ -40,7 +41,7 @@
 ---------------------------------------------------
 ### Project Takeaways
 - Not enough observations to create a better performing model than baseline
-- Data is skewed towards passing chips
+- Data is skewed towards passing wafers
 - Clustering might have helped
 - With so many undescriptive features it will require a lot more time to determine which ones are actually important
 
